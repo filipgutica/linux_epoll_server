@@ -1,15 +1,3 @@
-Select/Multithreaded/Epoll Server Analysis
-
-COMP 8005 - Assignment #2
-
-Submitted by
-
-Filip Gutica (A00781910)
-
-Gary Khoo (A00564204)
-
-[[TOC]]
-
 # Introduction
 
 The continuing growth and development of Software as a Service platforms such as Google, Facebook and Twitter require servers to handle requests from an ever increasing number of computing devices which results in a large concurrent load on the server. In the earlier days of the internet, servers traditionally handled these requests by assigning a thread to each request, however this approach is constrained by the CPU/memory resources available on the server. In this report, we examine the scalability and performance of the traditional multithreaded server along with newer architectures based on the select and epoll system calls.

@@ -10,13 +10,13 @@ To study the characteristics of these servers, we implemented different versions
 
 The multithreaded server works by spawning a thread every time a client connects to the server and was written using version 2.7.11 of Python. Figure 1 below details the server’s operation at a high level.
 
-![image alt text](image_0.png)
+![image alt text](/readme_images/image_0.png)
 
 *Figure 1: Multithreaded Server State Diagram*
 
 Each thread spawned by the server handles the job of receiving messages from the specific client and echoing them back. The thread does not terminate until it detects that the client has disconnected by reading an empty string from the network buffer. Figure 2 demonstrates the state machine behavior of a client thread spawned by the multithreaded server.
 
-![image alt text](image_1.png)
+![image alt text](/readme_images/image_1.png)
 
 *Figure 2: State Machine Diagram for Client Thread*
 
@@ -26,7 +26,7 @@ The process of assigning one thread to handle one connection is simple, however 
 
 Instead of spawning a thread to handle each client connection, the select server monitors a list of descriptors for read/write/exception activity and notifies us via the select() call whenever any activity takes place. For the purposes of our echo server, we only need to monitor our sockets for read activity. The select server was also written using version 2.7.11 of Python. A diagram of the server’s operation at a high level is detailed below.
 
-![image alt text](image_2.png)
+![image alt text](/readme_images/image_2.png)
 
 *Figure 3: Select Server State Diagram*
 
@@ -34,7 +34,7 @@ Instead of spawning a thread to handle each client connection, the select server
 
 Our Epoll server works by having one main thread with its own epoll event queue that only accepts new connections. We then have N worker threads, each with their own epoll event queue that check for the EPOLLIN and EPOLLRDHUP events in their event queues and respond accordingly. The main thread just passes on new file descriptors evenly to each worker thread to be processed.
 
-![image alt text](image_3.png)
+![image alt text](/readme_images/image_3.png)
 
 *Figure 4: Epoll Server State Diagram*
 
@@ -42,7 +42,7 @@ Our Epoll server works by having one main thread with its own epoll event queue 
 
 To stress test our servers, an epoll-based client was written in Python. The client allows us to specify a message to send to the server, the number of times to send the message and the number of connections to load the server with. The efficiency of epoll allows one PC to generate up to 28000 connections (the ephemeral port limit on Linux) without running into CPU/memory utilization issues as we would with a traditional threaded client implementation. The high level operation of our epoll client is presented in the state diagram below
 
-![image alt text](image_4.png)
+![image alt text](/readme_images/image_4.png)
 
 *Figure 5: Epoll Client State Diagram*
 
@@ -60,7 +60,7 @@ Client #2: Fedora 23 desktop with Intel Core2Duo E8400 and 4 GB RAM
 
 The network used to test the server was configured as follows in the diagram below:
 
-![image alt text](image_5.png)
+![image alt text](/readme_images/image_5.png)
 
 *Figure 6: Network Diagram Used to Test Server*
 
@@ -191,25 +191,25 @@ With the goal of determining the scalability and performance of the respective s
 
 Running our epoll client with the default values and making one connection to the select server, we find that it finishes successfully without any error.
 
-![image alt text](image_6.png)
+![image alt text](/readme_images/image_6.png)
 
 After running the test, the log file **client data - 1.csv **is also generated successfully and is included in the **data\select **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_7.png)
+![image alt text](/readme_images/image_7.png)
 
 ### Test Case 2 - 1000 clients connecting to select server
 
 Again running our epoll client with default values and making 1000 connections to the select server, we find that it finishes successfully without any error.
 
-![image alt text](image_8.png)
+![image alt text](/readme_images/image_8.png)
 
 After running the test, the log file **client data - 1000.csv **is also generated successfully and is included in the **data\select **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_9.png)
+![image alt text](/readme_images/image_9.png)
 
 ### Test Case 3 - 2000 clients connecting to select server
 
-When running our epoll client with default values and attempting 2000 connections to the select server, we find that the server terminates unexpectedly with the following error thrown:![image alt text](image_10.png)
+When running our epoll client with default values and attempting 2000 connections to the select server, we find that the server terminates unexpectedly with the following error thrown:![image alt text](/readme_images/image_10.png)
 
 The cause of this termination is due to the limit of 1024 file descriptors on the select system call. From the manpage of select:
 
@@ -221,39 +221,39 @@ Because FD_SETSIZE is set to 1024, attempting to monitor more than this number o
 
 Running our epoll client with the default values and making one connection to the multithreaded server, we find that it finishes successfully without any error.
 
-![image alt text](image_11.png)
+![image alt text](/readme_images/image_11.png)
 
 After running the test, the log file **client data - 1.csv **is also generated successfully and is included in the **data\mt **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_12.png)
+![image alt text](/readme_images/image_12.png)
 
 ### Test Case 5 - 10000 clients connecting to multithreaded server
 
 When running our epoll client with the default values and making 10000 connections to the multithreaded server, we find that it finishes successfully without any error.
 
-![image alt text](image_13.png)
+![image alt text](/readme_images/image_13.png)
 
 After running the test, the log file **client data - 10000.csv **is also generated successfully and is included in the **data\mt **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_14.png)
+![image alt text](/readme_images/image_14.png)
 
 ### Test Case 6 - 30000 clients connecting to multithreaded server
 
 Increasing the number of clients further to 30000, we find that the clients and server still finish successfully without any error. To load the server with this many connections, we ran our epoll client on two PCs to send 15000 connections each to the server.
 
-![image alt text](image_15.png)
+![image alt text](/readme_images/image_15.png)
 
-![image alt text](image_16.png)
+![image alt text](/readme_images/image_16.png)
 
 After running the test, two log files are generated successfully and are included in the **data\mt\30000 **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_17.png)
+![image alt text](/readme_images/image_17.png)
 
 ### Test Case 7 - 35000 clients connecting to multithreaded server
 
 When using both our client computers to hit the multithreaded server with 35000 combined connections, the server terminated prematurely with the error message below:
 
-![image alt text](image_18.png)
+![image alt text](/readme_images/image_18.png)
 
 Based on the error message, we see that the server has exhausted the number of threads it is able to spawn to handle the incoming connections.
 
@@ -261,45 +261,45 @@ Based on the error message, we see that the server has exhausted the number of t
 
 Running our epoll client with the default values and making one connection to the epoll server, we find that it finishes successfully without any error.
 
-![image alt text](image_19.png)
+![image alt text](/readme_images/image_19.png)
 
 After running the test, the log file **client data - 1.csv **is also generated successfully and is included in the **data\epoll **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_20.png)
+![image alt text](/readme_images/image_20.png)
 
 ### Test Case 9 - 10000 clients connecting to epoll server
 
 When running our epoll client with the default values and making 10000 connections to the epoll server, we find that it finishes successfully without any error.
 
-![image alt text](image_21.png)
+![image alt text](/readme_images/image_21.png)
 
 After running the test, the log file **client data - 10000.csv **is also generated successfully and is included in the **data\epoll **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_22.png)
+![image alt text](/readme_images/image_22.png)
 
 ### Test Case 10 - 40000 clients connecting to epoll server
 
 Increasing the number of clients further to 40000, we find that the clients and server still finish successfully without any error. To load the server with this many connections, we ran our epoll client on two PCs to send 20000 connections each to the server.
 
-![image alt text](image_23.png)
+![image alt text](/readme_images/image_23.png)
 
-![image alt text](image_24.png)
+![image alt text](/readme_images/image_24.png)
 
 After running the test, two log files are generated successfully and are included in the **data\epoll\40000 **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_25.png)
+![image alt text](/readme_images/image_25.png)
 
 ### Test Case 11 - 45000 clients connecting to epoll server
 
 Again increasing the load to 45000, we find that the epoll server still remains functional. At this point we are unable to load the server any further without more machines that we can use to run our epoll client on.
 
-![image alt text](image_26.png)
+![image alt text](/readme_images/image_26.png)
 
-![image alt text](image_27.png)
+![image alt text](/readme_images/image_27.png)
 
 After running the test, two log files are generated successfully and are included in the **data\epoll\45000 **folder of our submission. A preview of the log file is displayed below:
 
-![image alt text](image_28.png)
+![image alt text](/readme_images/image_28.png)
 
 ### Test Case 12 - 100000 clients connecting to epoll server
 
@@ -309,11 +309,11 @@ We were able to perform this test case during our demo with Aman thanks to the a
 
 An analysis of the resulting log files from our tests gives the following average response time for each client and server scenario:
 
-![image alt text](image_29.png)
+![image alt text](/readme_images/image_29.png)
 
 For comparison, these results are presented in bar graph format below:
 
-![image alt text](image_30.png)
+![image alt text](/readme_images/image_30.png)
 
 # Conclusion
 

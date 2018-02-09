@@ -7,8 +7,8 @@ import time
 from Queue import Queue
 
 BUFFER_SIZE = 1024
-PORT = 8005
-HOSTNAME = '192.168.1.4'
+PORT = 7000
+HOSTNAME = '127.0.0.1'
 
 def logData(queue, fileName):
     logFile = open(fileName, 'w')
@@ -25,6 +25,10 @@ def logData(queue, fileName):
     return
 
 def setUpClients():
+
+    ip = raw_input('server ip: ')
+    port = int(raw_input('server port: '))
+
     message = raw_input('message to send: ')
     numOfMessages = int(raw_input('number of times to send message: '))
     numOfSessions = int(raw_input('number of clients to simulate: '))
@@ -52,7 +56,7 @@ def setUpClients():
             # create a socket object
             clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # connect socket to the server
-            clientSocket.connect((HOSTNAME, PORT))
+            clientSocket.connect((ip, port))
         except socket.error, message:
             print 'Failed to create socket. Error code: ' + str(message[0]) + '-' + message[1]
             sys.exit()

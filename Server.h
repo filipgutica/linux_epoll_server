@@ -54,7 +54,7 @@ class Server
 {
 
 public:
-    explicit Server();
+    explicit Server(int);
     void startServer();
 
     static struct epoll_event events[EPOLL_QUEUE_LEN], event;

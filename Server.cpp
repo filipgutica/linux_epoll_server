@@ -24,12 +24,12 @@ int numClientsInThread[NUM_WORKERS];
   return 0;
 }*/
 
-Server::Server()
+Server::Server(int p)
 {
     // Seed the rand() generator
     srand (time(NULL));
     numClients = 0;
-    port = SERVER_PORT;
+    port = p;
     addr_size = sizeof(struct sockaddr_in);
 
     // Allocate memory for thread param sructures

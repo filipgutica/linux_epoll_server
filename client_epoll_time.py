@@ -25,6 +25,8 @@ def logData(queue, fileName):
     return
 
 def setUpClients():
+    ip = raw_input('server ip: ')
+    port = int(raw_input('server port: '))
     message = raw_input('message to send: ')
     sessionLenth = int(raw_input('how long should each session last (sec): '))
     numOfSessions = int(raw_input('number of clients to simulate: '))
@@ -50,7 +52,7 @@ def setUpClients():
             # create a socket object
             clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # connect socket to the server
-            clientSocket.connect((HOSTNAME, PORT))
+            clientSocket.connect((ip, port))
         except socket.error, message:
             print 'Failed to create socket. Error code: ' + str(message[0]) + '-' + message[1]
             sys.exit()

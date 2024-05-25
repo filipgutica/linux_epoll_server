@@ -7,7 +7,7 @@ docker build -t epoll_server_image .
 
 run using port mapping
 ```
-docker run -d -p <local_port>:<server_port> --name epoll_server_container epoll_server_image -p server_port
+docker run -d -p <local_port>:<server_port> --name epoll_server_container epoll_server_image -p <server_port>
 ```
 
 example to map local port 8000 to container port 7000, telling the server to run on port 7000

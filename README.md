@@ -1,3 +1,21 @@
+# Running the server with docker
+
+build the image using the included dockerfile
+```
+docker build -t epoll_server_image .
+```
+
+run using port mapping
+```
+docker run -d -p <local_port>:<server_port> --name epoll_server_container epoll_server_image -p server_port
+```
+
+example to map local port 8000 to container port 7000, telling the server to run on port 7000
+```
+docker run -d -p 8000:7000 --name epoll_server_container epoll_server_image -p 7000
+```
+
+
 # Introduction
 
 The continuing growth and development of Software as a Service platforms such as Google, Facebook and Twitter require servers to handle requests from an ever increasing number of computing devices which results in a large concurrent load on the server. In the earlier days of the internet, servers traditionally handled these requests by assigning a thread to each request, however this approach is constrained by the CPU/memory resources available on the server. In this report, we examine the scalability and performance of the traditional multithreaded server along with newer architectures based on the select and epoll system calls.

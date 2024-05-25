@@ -14,15 +14,37 @@ int numClients;
 // Number of clients per each thread
 int numClientsInThread[NUM_WORKERS];
 
-/*int main()
-{
-  system("ulimit -n 999999");
-  Server *server = new Server();
+void print_usage(const char *prog_name) {
+    std::cerr << "Usage: " << prog_name << " -p <port>" << std::endl;
+}
 
-  server->startServer();
+int main(int argc, char *argv[]) {
+    int port = -1;
+    int opt;
 
-  return 0;
-}*/
+    while ((opt = getopt(argc, argv, "p:")) != -1) {
+        switch (opt) {
+            case 'p':
+                port = std::stoi(optarg);
+                break;
+            default:
+                print_usage(argv[0]);
+                return 1;
+        }
+    }
+
+    if (port == -1) {
+        print_usage(argv[0]);
+        return 1;
+    }
+
+    system("ulimit -n 999999");
+    Server *server = new Server(port);
+
+    server->startServer();
+
+    return 0;
+}
 
 Server::Server(int p)
 {
@@ -270,7 +292,7 @@ void readSocket(int fd)
       if (n == 0)
       {
           // Socket is disconnected
-          //close(fd);
+          close(fd);
           return;
       }
       if (n == -1)
@@ -278,7 +300,7 @@ void readSocket(int fd)
           if (errno != EAGAIN && errno != EWOULDBLOCK)
           {
               // Error
-              //close(fd);
+              close(fd);
               return;
           }
       }
@@ -336,13 +358,14 @@ void* UpdateConsole(void *param)
     {
         usleep(100000);
         numClients = 0;
+        std::cout << "\r" << std::endl;
         for (int i = 0; i < NUM_WORKERS; i++)
         {
           std::cout << "Clients in thread: " << i << ", " << numClientsInThread[i] << std::endl;
           numClients += numClientsInThread[i];
         }
 
-        std::cout << "Total Clients Connected: " << numClients <<  std::endl;
+        std::cout << "Total Clients Connected: " << numClients << std::endl;
     }
 }
 
